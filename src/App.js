@@ -12,6 +12,7 @@ import CloudIcon from "@mui/icons-material/Cloud";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import moment from "moment/moment";
 
 const theme = createTheme({
   typography: {
@@ -21,8 +22,10 @@ const theme = createTheme({
 
 let cancelAxios = null;
 
+//!============================================================================
 function App() {
 
+  const [dateAndTime, setDateAndTime] = useState("")
   const [temp, setTemp] = useState({
     number: null,
     description: "",
@@ -31,6 +34,7 @@ function App() {
     icon: null
   });
   useEffect(() => {
+    setDateAndTime(moment().format('MMMM Do YYYY'))
     axios
       .get(
         "https://api.openweathermap.org/data/2.5/weather?lat=34.0531&lon=-6.79846&appid=88b51be3fbad8fb2eb940fa232ef84d9",
@@ -41,7 +45,6 @@ function App() {
         }
       )
       .then(function (response) {
-        // en cas de réussite de la requête
         const responseTemp = Math.round(response.data.main.temp - 272.15);
         const min =  Math.round(response.data.main.temp_min - 272.15);
         const max =  Math.round(response.data.main.temp_max - 272.15);
@@ -59,7 +62,6 @@ function App() {
         console.log(response);
       })
       .catch(function (error) {
-        // en cas d’échec de la requête
         console.log(error);
       });
       
@@ -69,7 +71,7 @@ function App() {
       }
 
   }, []);
-
+//!============================================================================
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="sm">
@@ -83,6 +85,7 @@ function App() {
             borderRadius: "15px",
             padding: 2,
             width: "100%",
+            boxShadow: "0px 5px 7px 7px rgba(0,0,0,0.2)"
           }}
         >
           {/*Content*/}
@@ -96,7 +99,7 @@ function App() {
               >
                 Rabat
               </Typography>
-              <Typography sx={{ ml: 3, pb: 1 }}>12/08/2023</Typography>
+              <Typography sx={{ ml: 3, pb: 1 }}>{dateAndTime}</Typography>
             </div>
             {/*=====City/Time=====*/}
             <hr />
@@ -118,7 +121,7 @@ function App() {
                 <Typography variant="h6">{temp.description}</Typography>
 
                 {/* Min / Max */}
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "60%" }}>
                   <h5>min: {temp.min}</h5>
                   <h5>|</h5>
                   <h5>max: {temp.max}</h5>
